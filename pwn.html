@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UNIT7SEC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Rubik+Glitch&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-black: #000000;
+      --glitch-red: #8a0000;
+      --glitch-cyan: #004080;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-black);
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .white-light-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .white-light-core {
+      width: min(640px, 95vw);
+      height: min(640px, 95vw);
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.42) 0%,
+        rgba(255, 255, 255, 0.16) 35%,
+        rgba(255, 255, 255, 0.04) 60%,
+        rgba(0, 0, 0, 0) 75%
+      );
+      filter: blur(18px);
+      animation: erraticBulbFlicker 4.5s infinite;
+    }
+
+    @keyframes erraticBulbFlicker {
+      0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        opacity: 0.92;
+        transform: scale(1);
+      }
+      19%, 24%, 55% {
+        opacity: 0.08;
+        transform: scale(0.92);
+      }
+      20%, 23% {
+        opacity: 1;
+        transform: scale(1.07);
+      }
+      54%, 56% {
+        opacity: 0.35;
+        transform: scale(0.97);
+      }
+      78% {
+        opacity: 0.15;
+      }
+      79% {
+        opacity: 0.98;
+      }
+      80% {
+        opacity: 0.05;
+      }
+      81% {
+        opacity: 0.88;
+      }
+    }
+
+    .stage {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.1rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .glitch-header {
+      position: relative;
+      font-family: 'Rubik Glitch', 'JetBrains Mono', monospace;
+      font-size: clamp(2rem, 5.6vw, 3.65rem);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-shadow:
+        4px 0 var(--glitch-red),
+        -4px 0 var(--glitch-cyan),
+        0 0 22px rgba(255, 0, 60, 0.65);
+      animation: scaryHeaderGlitch 2.2s infinite steps(1, end);
+    }
+
+    .glitch-header::before,
+    .glitch-header::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.85;
+    }
+
+    .glitch-header::before {
+      color: #ff003c;
+      z-index: -1;
+      text-shadow: -3px 0 #ff003c;
+      animation: headerTearTop 1.7s infinite linear alternate-reverse;
+    }
+
+    .glitch-header::after {
+      color: #00f0ff;
+      z-index: -2;
+      text-shadow: 3px 0 #00f0ff;
+      animation: headerTearBottom 1.3s infinite linear alternate-reverse;
+    }
+
+    .red-seven {
+      color: #c80000;
+      text-shadow:
+        0 0 18px #72001b,
+        0 0 32px rgba(255, 0, 0, 0.95),
+        -3px 0 #ffffff;
+    }
+
+    .glitch-header .flicker-char {
+      display: inline-block;
+      transition: opacity 0.03s linear;
+    }
+
+    .glitch-header .flicker-char.dead {
+      opacity: 0.04;
+      text-shadow: none;
+    }
+
+    .glitch-header .flicker-char.flare {
+      color: #72001b;
+      text-shadow: 0 0 22px #72001b, -4px 0 #002256;
+      transform: translateY(-4px) scale(1.18) skewX(-16deg);
+    }
+
+    .glitch-header .flicker-char.corrupt {
+      color: #000000;
+      background: #72001b;
+      text-shadow: none;
+      transform: skewX(18deg) scaleY(1.2);
+    }
+
+    @keyframes scaryHeaderGlitch {
+      0%, 72%, 77%, 88%, 94%, 100% {
+        transform: translate(0, 0) skew(0deg) scale(1);
+        filter: none;
+      }
+      73% {
+        transform: translate(-10px, 3px) skew(-14deg) scale(1.03);
+        filter: contrast(220%) brightness(1.4);
+      }
+      74% {
+        transform: translate(12px, -4px) skew(16deg) scale(0.97);
+        filter: invert(1);
+      }
+      75% {
+        transform: translate(-6px, -2px) skew(-8deg);
+      }
+      76% {
+        transform: translate(8px, 4px) skew(12deg);
+        filter: contrast(300%);
+      }
+      89% {
+        transform: translate(14px, 0) skew(-22deg);
+        filter: hue-rotate(90deg) contrast(250%);
+      }
+      90% {
+        transform: translate(-14px, 2px) skew(20deg);
+      }
+      91% {
+        transform: translate(4px, -5px) scaleY(1.12);
+        filter: invert(0.9);
+      }
+    }
+
+    @keyframes headerTearTop {
+      0% { clip-path: inset(8% 0 78% 0); transform: translate(-6px, -2px); }
+      20% { clip-path: inset(45% 0 38% 0); transform: translate(7px, 1px); }
+      40% { clip-path: inset(15% 0 65% 0); transform: translate(-8px, 0); }
+      60% { clip-path: inset(70% 0 12% 0); transform: translate(6px, -2px); }
+      80% { clip-path: inset(30% 0 55% 0); transform: translate(-5px, 2px); }
+      100% { clip-path: inset(58% 0 22% 0); transform: translate(8px, 0); }
+    }
+
+    @keyframes headerTearBottom {
+      0% { clip-path: inset(65% 0 14% 0); transform: translate(6px, 2px); }
+      25% { clip-path: inset(12% 0 72% 0); transform: translate(-7px, -1px); }
+      50% { clip-path: inset(52% 0 28% 0); transform: translate(8px, 0); }
+      75% { clip-path: inset(22% 0 60% 0); transform: translate(-6px, 2px); }
+      100% { clip-path: inset(80% 0 5% 0); transform: translate(5px, -2px); }
+    }
+
+    .logo-twitch-container {
+      position: relative;
+      width: clamp(270px, 42vw, 390px);
+      height: clamp(270px, 42vw, 390px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .logo-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    .logo-main {
+      z-index: 3;
+      filter: drop-shadow(0 0 26px rgba(255, 255, 255, 0.45));
+      animation: maniacTwitch 2.6s infinite steps(1, end);
+    }
+
+    .logo-ghost-red {
+      z-index: 2;
+      opacity: 0.78;
+      mix-blend-mode: screen;
+      filter: drop-shadow(-4px 0 #ff003c) contrast(180%);
+      animation: ghostRedTwitch 1.9s infinite steps(1, end);
+    }
+
+    .logo-ghost-cyan {
+      z-index: 1;
+      opacity: 0.78;
+      mix-blend-mode: screen;
+      filter: drop-shadow(4px 0 #00f0ff) contrast(180%);
+      animation: ghostCyanTwitch 2.2s infinite steps(1, end);
+    }
+
+    @keyframes maniacTwitch {
+      0%, 14%, 38%, 62%, 84%, 100% {
+        transform: translate(0, 0) rotate(0deg) scale(1) skew(0deg);
+        clip-path: inset(0 0 0 0);
+        filter: drop-shadow(0 0 26px rgba(255, 255, 255, 0.45));
+      }
+      15% {
+        transform: translate(-11px, 4px) rotate(-6deg) scale(1.06) skew(-10deg);
+        clip-path: inset(12% 0 42% 0);
+        filter: invert(1) drop-shadow(0 0 25px #ffffff);
+      }
+      16% {
+        transform: translate(13px, -6px) rotate(7deg) scale(0.95) skew(12deg);
+        clip-path: inset(48% 0 10% 0);
+      }
+      17% {
+        transform: translate(-4px, 2px) rotate(-2deg) scale(1.02);
+        clip-path: inset(0 0 0 0);
+      }
+      39% {
+        transform: translate(9px, 7px) rotate(5deg) skew(-14deg);
+        clip-path: inset(25% 0 25% 0);
+      }
+      40% {
+        transform: translate(-14px, -5px) rotate(-8deg) scale(1.08);
+        filter: contrast(250%) brightness(1.6);
+      }
+      63% {
+        transform: translate(0, -10px) rotate(4deg) scale(0.93) skew(9deg);
+        clip-path: inset(5% 0 60% 0);
+      }
+      64% {
+        transform: translate(-9px, 8px) rotate(-5deg) scale(1.05);
+        clip-path: inset(55% 0 5% 0);
+        filter: invert(0.9);
+      }
+      85% {
+        transform: translate(12px, -3px) rotate(8deg) skew(-15deg);
+      }
+      86% {
+        transform: translate(-10px, 5px) rotate(-7deg) skew(11deg);
+      }
+      87% {
+        transform: translate(6px, -6px) rotate(3deg);
+      }
+    }
+
+    @keyframes ghostRedTwitch {
+      0%, 20%, 50%, 75%, 100% { transform: translate(0, 0); opacity: 0; }
+      21% { transform: translate(-14px, 3px) skew(-8deg); opacity: 0.9; clip-path: inset(10% 0 45% 0); }
+      23% { transform: translate(10px, -4px); opacity: 0.85; clip-path: inset(50% 0 15% 0); }
+      51% { transform: translate(-16px, -6px) rotate(-5deg); opacity: 0.95; }
+      76% { transform: translate(12px, 5px) skew(10deg); opacity: 0.9; }
+    }
+
+    @keyframes ghostCyanTwitch {
+      0%, 25%, 55%, 80%, 100% { transform: translate(0, 0); opacity: 0; }
+      26% { transform: translate(14px, -3px) skew(8deg); opacity: 0.9; clip-path: inset(40% 0 15% 0); }
+      28% { transform: translate(-10px, 4px); opacity: 0.85; clip-path: inset(15% 0 50% 0); }
+      56% { transform: translate(16px, 6px) rotate(5deg); opacity: 0.95; }
+      81% { transform: translate(-12px, -5px) skew(-10deg); opacity: 0.9; }
+    }
+
+    .scramble-box {
+      min-height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #scramble-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(1.1rem, 3.2vw, 1.5rem);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #f8fafc;
+      text-shadow:
+        0 0 12px rgba(255, 255, 255, 0.65),
+        2px 0 rgba(255, 0, 60, 0.75),
+        -2px 0 rgba(0, 240, 255, 0.75);
+      cursor: pointer;
+    }
+
+    .scramble-char {
+      color: #ff003c;
+      text-shadow: 0 0 10px #ff003c, 2px 0 #00f0ff;
+    }
+
+    .social-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.35rem;
+      margin-top: 0.35rem;
+    }
+
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 1.25rem;
+      background: rgba(0, 0, 0, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      box-shadow:
+        0 0 12px rgba(255, 255, 255, 0.18),
+        2px 0 rgba(255, 0, 60, 0.45),
+        -2px 0 rgba(0, 240, 255, 0.45);
+      text-shadow:
+        1px 0 rgba(255, 0, 60, 0.75),
+        -1px 0 rgba(0, 240, 255, 0.75);
+      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease, color 0.12s ease;
+    }
+
+    .social-btn svg {
+      width: 17px;
+      height: 17px;
+      fill: currentColor;
+      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+    }
+
+    .social-btn:hover {
+      border-color: #ff003c;
+      color: #ffffff;
+      transform: translate(-2px, -2px) skewX(-6deg);
+      box-shadow:
+        0 0 18px rgba(255, 0, 60, 0.75),
+        4px 0 #ff003c,
+        -4px 0 #00f0ff;
+    }
+
+    .social-btn:active {
+      transform: translate(1px, 1px);
+    }
+
+    .vhs-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      pointer-events: none;
+      overflow: hidden;
+      box-shadow:
+        inset 0 0 95px rgba(0, 0, 0, 0.95),
+        inset 0 0 38px rgba(255, 255, 255, 0.14);
+    }
+
+    .vhs-scanlines {
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.04) 0px,
+          rgba(255, 255, 255, 0.04) 1px,
+          rgba(0, 0, 0, 0.58) 2px,
+          rgba(0, 0, 0, 0.58) 4px
+        );
+      animation: vhsJitter 0.12s infinite;
+    }
+
+    .vhs-tracking-bar {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 46px;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(255, 255, 255, 0.12) 45%,
+        rgba(0, 240, 255, 0.12) 50%,
+        rgba(255, 0, 60, 0.12) 55%,
+        transparent
+      );
+      filter: blur(2px);
+      animation: vhsRoll 6.5s linear infinite;
+    }
+
+    #vhs-noise-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.075;
+      mix-blend-mode: screen;
+    }
+
+    .vhs-osd-top {
+      position: absolute;
+      top: 1.25rem;
+      left: 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: rgba(255, 255, 255, 0.85);
+      text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.85),
+        -2px 0 rgba(255, 0, 60, 0.7),
+        2px 0 rgba(0, 240, 255, 0.7);
+    }
+
+    .vhs-osd-bottom {
+      position: absolute;
+      bottom: 1.25rem;
+      right: 1.5rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: rgba(255, 255, 255, 0.82);
+      text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.85),
+        -2px 0 rgba(255, 0, 60, 0.7),
+        2px 0 rgba(0, 240, 255, 0.7);
+    }
+
+    @keyframes vhsRoll {
+      0% { top: -15%; }
+      100% { top: 115%; }
+    }
+
+    @keyframes vhsJitter {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(1px); }
+      100% { transform: translateY(0px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="white-light-backdrop" aria-hidden="true">
+    <div class="white-light-core"></div>
+  </div>
+
+  <main class="stage">
+    <h1 class="glitch-header" id="glitch-header" data-text="PWNED BY [ UNIT7 ]">PWNED BY [ UNIT7 ]</h1>
+
+    <div class="logo-twitch-container" id="logo-trigger" title="">
+      <img
+        class="logo-layer logo-ghost-cyan"
+        src="https://files.catbox.moe/0fmjy6.png"
+        alt=""
+        aria-hidden="true"
+      />
+      <img
+        class="logo-layer logo-ghost-red"
+        src="https://files.catbox.moe/0fmjy6.png"
+        alt=""
+        aria-hidden="true"
+      />
+      <img
+        class="logo-layer logo-main"
+        src="https://files.catbox.moe/0fmjy6.png"
+        alt="UNIT7 Logo"
+      />
+    </div>
+
+    <div class="scramble-box">
+      <p id="scramble-text" aria-live="polite">server not reachable :(</p>
+    </div>
+
+    <nav class="social-links" aria-label="Social Media">
+      <a class="social-btn" href="https://instagram.com/unit7sec" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+        </svg>
+        <span>Instagram</span>
+      </a>
+      <a class="social-btn" href="https://x.com/weareunit7" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+        <span>Twitter</span>
+      </a>
+    </nav>
+  </main>
+
+  <div class="vhs-overlay" aria-hidden="true">
+    <canvas id="vhs-noise-canvas"></canvas>
+    <div class="vhs-scanlines"></div>
+    <div class="vhs-tracking-bar"></div>
+    <div class="vhs-osd-top">PLAY &#9658; // CH-07</div>
+    <div class="vhs-osd-bottom" id="vhs-timer">SP 00:00:00</div>
+  </div>
+
+  <script>
+    (() => {
+      const headerEl = document.getElementById('glitch-header');
+      const headerRawText = headerEl.textContent;
+      headerEl.innerHTML = headerRawText
+        .split('')
+        .map((ch) => {
+          if (ch === ' ') return ' ';
+          if (ch === '7') return `<span class="flicker-char red-seven">${ch}</span>`;
+          return `<span class="flicker-char">${ch}</span>`;
+        })
+        .join('');
+
+      const charSpans = Array.from(headerEl.querySelectorAll('.flicker-char'));
+
+      setInterval(() => {
+        const count = 1 + Math.floor(Math.random() * 4);
+        for (let i = 0; i < count; i++) {
+          const span = charSpans[Math.floor(Math.random() * charSpans.length)];
+          if (!span) continue;
+          const r = Math.random();
+          const mode = r < 0.55 ? 'dead' : r < 0.85 ? 'flare' : 'corrupt';
+          span.classList.add(mode);
+          setTimeout(() => {
+            span.classList.remove('dead', 'flare', 'corrupt');
+          }, 45 + Math.random() * 130);
+        }
+      }, 115);
+
+      class TextScramble {
+        constructor(el) {
+          this.el = el;
+          this.chars = '!<>-_\\/[]{}—=+*^?#01█▓▒░UNIT7';
+          this.update = this.update.bind(this);
+          this.frameRequest = null;
+          this.frame = 0;
+          this.queue = [];
+        }
+
+        setText(newText) {
+          const oldText = this.el.innerText;
+          const length = Math.max(oldText.length, newText.length);
+          this.queue = [];
+          for (let i = 0; i < length; i++) {
+            const from = oldText[i] || '';
+            const to = newText[i] || '';
+            const start = Math.floor(Math.random() * 18);
+            const end = start + Math.floor(Math.random() * 24) + 10;
+            this.queue.push({ from, to, start, end, char: '' });
+          }
+          cancelAnimationFrame(this.frameRequest);
+          this.frame = 0;
+          this.update();
+        }
+
+        update() {
+          let output = '';
+          let complete = 0;
+          for (let i = 0; i < this.queue.length; i++) {
+            let { from, to, start, end, char } = this.queue[i];
+            if (this.frame >= end) {
+              complete++;
+              output += to;
+            } else if (this.frame >= start) {
+              if (!char || Math.random() < 0.32) {
+                char = this.chars[Math.floor(Math.random() * this.chars.length)];
+                this.queue[i].char = char;
+              }
+              output += `<span class="scramble-char">${char}</span>`;
+            } else {
+              output += from;
+            }
+          }
+          this.el.innerHTML = output;
+          if (complete < this.queue.length) {
+            this.frameRequest = requestAnimationFrame(this.update);
+            this.frame++;
+          }
+        }
+      }
+
+      const scrambleEl = document.getElementById('scramble-text');
+      const scrambler = new TextScramble(scrambleEl);
+      const TARGET_TEXT = 'server not reachable :(';
+
+      function triggerScramble() {
+        scrambler.setText(TARGET_TEXT);
+      }
+
+      triggerScramble();
+      setInterval(triggerScramble, 5000);
+      scrambleEl.addEventListener('click', triggerScramble);
+
+      const logoContainer = document.getElementById('logo-trigger');
+
+      function violentLogoJolt() {
+        const tx = (Math.random() - 0.5) * 34;
+        const ty = (Math.random() - 0.5) * 26;
+        const rot = (Math.random() - 0.5) * 22;
+        const skew = (Math.random() - 0.5) * 24;
+        logoContainer.style.transform = `translate(${tx}px, ${ty}px) rotate(${rot}deg) skewX(${skew}deg)`;
+        setTimeout(() => {
+          logoContainer.style.transform = 'translate(0, 0) rotate(0deg) skewX(0deg)';
+        }, 55 + Math.random() * 65);
+      }
+
+      setInterval(() => {
+        if (Math.random() < 0.32) {
+          violentLogoJolt();
+          if (Math.random() < 0.5) {
+            setTimeout(violentLogoJolt, 95);
+          }
+        }
+      }, 650);
+
+      logoContainer.addEventListener('click', () => {
+        violentLogoJolt();
+        triggerScramble();
+      });
+
+      const noiseCanvas = document.getElementById('vhs-noise-canvas');
+      const nCtx = noiseCanvas.getContext('2d');
+      noiseCanvas.width = 180;
+      noiseCanvas.height = 180;
+
+      function renderVHSNoise() {
+        const imgData = nCtx.createImageData(noiseCanvas.width, noiseCanvas.height);
+        const data = imgData.data;
+        for (let i = 0; i < data.length; i += 4) {
+          const v = Math.random() * 255;
+          data[i] = v;
+          data[i + 1] = v;
+          data[i + 2] = v;
+          data[i + 3] = 255;
+        }
+        nCtx.putImageData(imgData, 0, 0);
+        requestAnimationFrame(renderVHSNoise);
+      }
+      renderVHSNoise();
+
+      const timerEl = document.getElementById('vhs-timer');
+      let seconds = 0;
+      setInterval(() => {
+        seconds++;
+        const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+        const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+        const secs = String(seconds % 60).padStart(2, '0');
+        timerEl.textContent = `SP ${hrs}:${mins}:${secs}`;
+      }, 1000);
+    })();
+  </script>
+</body>
+</html>
